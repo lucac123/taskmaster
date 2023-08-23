@@ -15,28 +15,38 @@ import SignIn from '/app/components/SignIn'
 const inter = Inter({ subsets: ['latin'] })
 
 const handleSignIn = () => {
-  const {result, error} = signIn()
+  const { result, error } = signIn()
+  if (error)
+    console.log(error)
 }
 const handleLogOut = () => {
-  const {result, error} = logOut()
+  const { result, error } = logOut()
+  if (error)
+    console.log(error)
 }
 
 
 
 export default function RootLayout({ children }) {
   const [page, setPage] = useState('Tasks')
-  const [user, setUser] = useState()
+  const [user, setUser] = useState(auth.currentUser)
+
   useEffect(() => {
+    // run on load or if firebase auth variable changes
     onAuthStateChanged(auth, setUser)
   }, [auth])
-  
+
   return (
     <UserContext.Provider value={[user, setUser]}>
       <PageContext.Provider value={[page, setPage]}>
         <html lang="en">
           <Head><title>Task Master</title></Head>
           <body className={`bg-background w-screen h-screen ${inter.className}`}>
-            {user? <><NavPanel action={handleLogOut}/>{children}</> : <SignIn action={handleSignIn}/>}
+            {user ?
+              <div className="flex">
+                <NavPanel action={handleLogOut} />
+                {children}
+              </div> : <SignIn action={handleSignIn} />}
           </body>
         </html>
       </PageContext.Provider>

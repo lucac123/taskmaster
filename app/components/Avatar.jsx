@@ -1,6 +1,3 @@
-import Link from 'next/link'
-import avatar from 'public/avatar.svg'
-
 import { useState } from 'react'
 
 export default function Avatar({ action }) {
